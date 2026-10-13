@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhammad Azka Awwadi — Portofolio Siswa PPLG</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg-void:#08080d;
+    --bg-panel:#0f0f18;
+    --bg-card:#15151f;
+    --accent:#b26bff;       /* Ungu Cyberpunk */
+    --accent-soft:#8b5cf6;
+    --accent-dim:rgba(178,107,255,0.15);
+    --text-main:#f4f2fb;
+    --text-dim:#9b98ab;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--bg-void);
+    color:var(--text-main);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3,.font-display{ font-family:'Space Grotesk', sans-serif; }
+  .font-mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-track{ background:var(--bg-void); }
+  ::-webkit-scrollbar-thumb{ background:var(--accent-soft); border-radius:4px; }
+
+  /* Circuit / grid background */
+  .grid-field{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(178,107,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(178,107,255,0.06) 1px, transparent 1px);
+    background-size:44px 44px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 90%);
+  }
+
+  .glow-orb{
+    position:absolute; border-radius:50%;
+    filter:blur(90px); opacity:0.35; pointer-events:none;
+  }
+
+  /* Nav */
+  #navbar{
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(8,8,13,0.55);
+    border-bottom: 1px solid rgba(178,107,255,0.15);
+  }
+
+  .nav-link{
+    position:relative; color:var(--text-dim); transition:color .25s ease;
+  }
+  .nav-link::after{
+    content:''; position:absolute; left:0; bottom:-4px; width:0; height:1px;
+    background:var(--accent); transition:width .25s ease;
+  }
+  .nav-link:hover{ color:var(--text-main); }
+  .nav-link:hover::after{ width:100%; }
+
+  /* Glow button */
+  .btn-glow{
+    position:relative;
+    background:linear-gradient(135deg, var(--accent-soft), var(--accent));
+    color:#0a0a0f;
+    font-weight:600;
+    box-shadow:0 0 0 rgba(178,107,255,0);
+    transition:box-shadow .35s ease, transform .25s ease;
+  }
+  .btn-glow:hover{
+    box-shadow:0 0 22px 4px rgba(178,107,255,0.55), 0 0 60px 10px rgba(178,107,255,0.15);
+    transform:translateY(-2px);
+  }
+
+  .btn-outline{
+    border:1px solid rgba(178,107,255,0.4);
+    color:var(--text-main);
+    transition:all .3s ease;
+  }
+  .btn-outline:hover{
+    border-color:var(--accent);
+    box-shadow:0 0 18px rgba(178,107,255,0.35);
+    background:var(--accent-dim);
+  }
+
+  /* Terminal / typing */
+  .terminal{
+    background:var(--bg-panel);
+    border:1px solid rgba(178,107,255,0.2);
+    border-radius:12px;
+    box-shadow:0 0 40px rgba(178,107,255,0.08);
+  }
+  .cursor-blink{
+    display:inline-block; width:9px; height:1.1em; background:var(--accent);
+    margin-left:4px; vertical-align:text-bottom;
+    animation: blink 1s steps(1) infinite;
+    box-shadow:0 0 8px var(--accent);
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* Profile frame */
+  .profile-frame{
+    position:relative; border-radius:28px; padding:5px;
+    background:linear-gradient(160deg, var(--accent), transparent 60%);
+  }
+  .profile-frame img{
+    border-radius:24px; display:block; width:100%; height:100%; object-fit:cover;
+    background:var(--bg-card);
+  }
+  .profile-frame::after{
+    content:''; position:absolute; inset:-14px; border-radius:34px;
+    border:1px solid rgba(178,107,255,0.25);
+    box-shadow:0 0 50px rgba(178,107,255,0.18);
+    pointer-events:none;
+  }
+
+  /* Certificate card */
+  .cert-card{
+    background:var(--bg-card);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:14px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .cert-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--accent);
+    box-shadow:0 14px 30px rgba(0,0,0,0.45), 0 0 20px rgba(178,107,255,0.25);
+  }
+  .cert-card .cert-img-wrap{ overflow:hidden; aspect-ratio:4/3; background:#1c1c28; }
+  .cert-card img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .45s ease, filter .35s ease;
+  }
+  .cert-card:hover img{ transform:scale(1.08); filter:brightness(0.75); }
+
+  /* Portfolio card */
+  .proj-card{
+    background:var(--bg-card);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:16px;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .proj-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(178,107,255,0.5);
+  }
+
+  .section-eyebrow{
+    letter-spacing:0.35em; font-size:0.7rem; color:var(--accent);
+  }
+
+  /* Modal */
+  #cert-modal{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(4,4,8,0.88);
+    backdrop-filter: blur(6px);
+    display:none; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  #cert-modal.active{ display:flex; }
+  #cert-modal img{
+    max-width:min(90vw, 780px); max-height:82vh;
+    border-radius:12px;
+    border:1px solid rgba(178,107,255,0.3);
+    box-shadow:0 0 60px rgba(178,107,255,0.25);
+  }
+  #cert-modal-close{
+    position:absolute; top:26px; right:30px;
+    width:42px; height:42px; border-radius:50%;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(178,107,255,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; color:var(--text-main); cursor:pointer;
+    transition:all .25s ease;
+  }
+  #cert-modal-close:hover{ background:var(--accent); color:#0a0a0f; box-shadow:0 0 20px rgba(178,107,255,0.5); }
+
+  .field-input{
+    background:var(--bg-card);
+    border:1px solid rgba(255,255,255,0.08);
+    color:var(--text-main);
+    transition:border-color .25s ease, box-shadow .25s ease;
+  }
+  .field-input:focus{
+    outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(178,107,255,0.15);
+  }
+
+  .social-pill{
+    border:1px solid rgba(255,255,255,0.08);
+    color:var(--text-dim);
+    transition:all .25s ease;
+  }
+  .social-pill:hover{
+    border-color:var(--accent); color:var(--text-main);
+    box-shadow:0 0 16px rgba(178,107,255,0.3);
+  }
+
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  @media (max-width:768px){
+    .grid-field{ mask-image: radial-gradient(ellipse 100% 60% at 50% 20%, black 30%, transparent 90%); }
+  }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- ============ NAVBAR ============ -->
+<header id="navbar" class="fixed top-0 left-0 w-full z-50">
+  <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="#home" class="font-display text-lg font-semibold tracking-tight">
+      Azka<span style="color:var(--accent)">.</span>Awwadi
+    </a>
+
+    <ul class="hidden md:flex items-center gap-8 text-sm font-mono">
+      <li><a href="#home" class="nav-link">Imah</a></li>
+      <li><a href="#about" class="nav-link">Ngeunaan Abdi</a></li>
+      <li><a href="#certificates" class="nav-link">Sértipikat</a></li>
+      <li><a href="#portfolio" class="nav-link">Karya Abdi</a></li>
+      <li><a href="#perjalanan" class="nav-link">Riwayat Sakola</a></li>
+    </ul>
+
+    <button id="menu-btn" class="md:hidden text-2xl leading-none" aria-label="Buka menu">☰</button>
+  </nav>
+
+  <ul id="mobile-menu" class="hidden md:hidden flex-col gap-1 px-6 pb-5 text-sm font-mono">
+    <li><a href="#home" class="block py-2 nav-link">Imah</a></li>
+    <li><a href="#about" class="block py-2 nav-link">Ngeunaan Abdi</a></li>
+    <li><a href="#certificates" class="block py-2 nav-link">Sértipikat</a></li>
+    <li><a href="#portfolio" class="block py-2 nav-link">Karya Abdi</a></li>
+    <li><a href="#perjalanan" class="block py-2 nav-link">Riwayat Sakola</a></li>
+  </ul>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="home" class="relative min-h-screen flex items-center pt-28 pb-16 px-6 overflow-hidden">
+  <div class="grid-field"></div>
+  <div class="glow-orb w-96 h-96 -top-20 -left-20" style="background:var(--accent);"></div>
+  <div class="glow-orb w-96 h-96 bottom-0 right-0" style="background:#5eead4;"></div>
+
+  <div class="relative max-w-3xl mx-auto w-full text-center">
+    <div class="reveal">
+      <p class="section-eyebrow font-mono mb-4">HALO, WILUJENG SUMPING</p>
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+        Abdi <span style="color:var(--accent)">Muhammad Azka Awwadi</span>
+      </h1>
+
+      <p class="text-xl sm:text-2xl font-medium mb-6" style="color:var(--text-main)">
+        <span id="typing-text" style="color:var(--accent)"></span><span class="cursor-blink"></span>
+      </p>
+
+      <div class="flex justify-center">
+        <a href="#about" class="btn-glow px-7 py-3 rounded-full text-sm">Tingali Profil Abdi</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TENTANG SAYA ============ -->
+<section id="about" class="relative py-24 px-6">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-center">
+    <div class="reveal flex justify-center md:justify-start">
+      <div class="profile-frame w-72 h-80 sm:w-80 sm:h-96">
+        <img src="potoakuguamesayaurang.png" alt="Foto Muhammad Azka Awwadi">
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="section-eyebrow font-mono mb-3">NGEUNAAN ABDI</p>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold mb-6">Murid PPLG SMK Wikrama Bogor</h2>
+      <p class="text-[var(--text-dim)] leading-relaxed mb-4">
+        Perkenalkeun, Nami abdi Muhammad Azka Awwadi. Abdi murid kelas XI jurusan Pangembangan Parangkat Lunak jeung Gim (PPLG) di SMK Wikrama Bogor. Ti baheula, abdi resep kana dunya téknologi, utamana dina nyieun website jeung diajar coding.
+      </p>
+      <p class="text-[var(--text-dim)] leading-relaxed mb-8">
+        Ayeuna mah abdi keur diajar HTML, CSS, JavaScript, PHP, jeung dasar UI/UX. Di halaman ieu, abdi nyimpen sababaraha hasil karya jeung sértipikat nu geus dikumpulkeun salila sakola.
+      </p>
+
+      <div class="grid grid-cols-2 gap-4 font-mono text-sm">
+        <div class="bg-[var(--bg-card)] border border-white/5 rounded-xl px-4 py-3">
+          <p style="color:var(--accent)">HTML</p>
+        </div>
+        <div class="bg-[var(--bg-card)] border border-white/5 rounded-xl px-4 py-3">
+          <p style="color:var(--accent)">CSS</p>
+        </div>
+        <div class="bg-[var(--bg-card)] border border-white/5 rounded-xl px-4 py-3">
+          <p style="color:var(--accent)">JavaScript</p>
+        </div>
+        <div class="bg-[var(--bg-card)] border border-white/5 rounded-xl px-4 py-3">
+          <p style="color:var(--accent)">PHP</p>
+        </div>
+        <div class="bg-[var(--bg-card)] border border-white/5 rounded-xl px-4 py-3">
+          <p style="color:var(--accent)">UI/UX</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERTIFIKAT ============ -->
+<section id="certificates" class="relative py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14 reveal">
+      <p class="section-eyebrow font-mono mb-3">PANCAPAIAN</p>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold">Sértipikat</h2>
+      <p class="text-[var(--text-dim)] mt-3 max-w-xl mx-auto">Pencét salah sahiji sértipikat pikeun ningali ukuran lengkepna.</p>
+    </div>
+
+    <div id="cert-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 reveal">
+      <!-- 16 kotak sertifikat digenerate lewat JS di bawah -->
+    </div>
+  </div>
+</section>
+
+<!-- Modal Sertifikat -->
+<div id="cert-modal">
+  <div id="cert-modal-close">✕</div>
+  <img id="cert-modal-img" src="" alt="Pratinjau sertifikat">
+</div>
+
+<!-- ============ PORTOFOLIO ============ -->
+<section id="portfolio" class="relative py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14 reveal">
+      <p class="section-eyebrow font-mono mb-3">HASIL BALAJAR</p>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold">Karya Abdi</h2>
+      <p class="text-[var(--text-dim)] mt-3 max-w-xl mx-auto">Ieu sababaraha hasil karya nu geus abdi damel salila diajar di sakola.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+      <a href="https://brilliant-purple-rhh2desm.edgeone.dev/" target="_blank" rel="noopener" class="proj-card overflow-hidden block group">
+        <div class="aspect-video overflow-hidden" style="background:#1c1c28;">
+          <img src="Screenshot 2026-07-11 065119.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        </div>
+        <div class="p-6">
+          <h3 class="font-display text-lg font-semibold">Ngajieun Website Dampak Penjajahan Belanda Di Widang IPTEK</h3>
+        </div>
+      </a>
+
+      <a href="https://kawad1.kesug.com/" target="_blank" rel="noopener" class="proj-card overflow-hidden block group">
+        <div class="aspect-video overflow-hidden" style="background:#1c1c28;">
+          <img src="Screenshot 2026-07-11 070751.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        </div>
+        <div class="p-6">
+          <h3 class="font-display text-lg font-semibold">Ngajieun Sistem Pengiriman Paket Ngagunakeun PHP</h3>
+        </div>
+      </a>
+
+      <a href="https://political-purple-qdor9xz3.edgeone.dev/" target="_blank" rel="noopener" class="proj-card overflow-hidden block group">
+        <div class="aspect-video overflow-hidden" style="background:#1c1c28;">
+          <img src="Screenshot 2026-07-11 160614.png" alt="Form Pendaftaran dengan PHP" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        </div>
+        <div class="p-6">
+          <h3 class="font-display text-lg font-semibold">Ngajieun CRUD Sistem Manajemen Bus</h3>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PERJALANAN ============ -->
+<section id="perjalanan" class="relative py-24 px-6">
+  <div class="max-w-3xl mx-auto text-center mb-16 reveal">
+    <p class="section-eyebrow font-mono mb-3">RIWAYAT PENDIDIKAN</p>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">Riwayat Sakola</h2>
+    <p class="text-[var(--text-dim)]">Ieu riwayat sakola abdi ti mimiti SD nepi ka ayeuna.</p>
+  </div>
+
+  <div class="max-w-2xl mx-auto relative reveal">
+    <div class="absolute left-[15px] sm:left-1/2 top-2 bottom-2 w-px sm:-translate-x-1/2" style="background:linear-gradient(to bottom, var(--accent), transparent);"></div>
+
+    <div class="relative pl-10 sm:pl-0 sm:grid sm:grid-cols-2 sm:gap-10 mb-12">
+      <div class="absolute left-0 sm:left-1/2 top-1 w-4 h-4 rounded-full sm:-translate-x-1/2" style="background:var(--accent); box-shadow:0 0 14px var(--accent);"></div>
+      <div class="sm:text-right sm:pr-10">
+        <p class="font-mono text-sm mb-1" style="color:var(--accent)">2016 — 2022</p>
+        <h3 class="font-display text-lg font-semibold">Sekolah Dasar</h3>
+      </div>
+      <div class="sm:pl-10 mt-2 sm:mt-0 flex items-center gap-2">
+        <img src="sdncaringin1.png" alt="Logo SDN Caringin 1" class="w-6 h-6 rounded-full object-cover border border-white/10 flex-shrink-0">
+        <p class="text-sm text-[var(--text-dim)]">SDN Caringin 1</p>
+      </div>
+    </div>
+
+    <div class="relative pl-10 sm:pl-0 sm:grid sm:grid-cols-2 sm:gap-10 mb-12">
+      <div class="absolute left-0 sm:left-1/2 top-1 w-4 h-4 rounded-full sm:-translate-x-1/2" style="background:var(--accent); box-shadow:0 0 14px var(--accent);"></div>
+      <div class="sm:text-right sm:pr-10 flex items-center gap-2 sm:justify-end">
+        <img src="smpn2ciawi.png" alt="Logo SMPN 2 Ciawi" class="w-6 h-6 rounded-full object-cover border border-white/10 flex-shrink-0 order-1 sm:order-2">
+        <p class="text-sm text-[var(--text-dim)] order-2 sm:order-1">SMPN 2 Ciawi</p>
+      </div>
+      <div class="sm:pl-10 mt-2 sm:mt-0">
+        <p class="font-mono text-sm mb-1" style="color:var(--accent)">2022 — 2025</p>
+        <h3 class="font-display text-lg font-semibold">Sekolah Menengah Pertama</h3>
+      </div>
+    </div>
+
+    <div class="relative pl-10 sm:pl-0 sm:grid sm:grid-cols-2 sm:gap-10">
+      <div class="absolute left-0 sm:left-1/2 top-1 w-4 h-4 rounded-full sm:-translate-x-1/2" style="background:var(--accent); box-shadow:0 0 14px var(--accent);"></div>
+      <div class="sm:text-right sm:pr-10">
+        <p class="font-mono text-sm mb-1" style="color:var(--accent)">2025 — Sekarang</p>
+        <h3 class="font-display text-lg font-semibold">Sekolah Menengah Kejuruan</h3>
+      </div>
+      <div class="sm:pl-10 mt-2 sm:mt-0 flex items-center gap-2">
+        <img src="smkwikramabogor.png" alt="Logo SMK Wikrama Bogor" class="w-6 h-6 rounded-full object-cover border border-white/10 flex-shrink-0">
+        <p class="text-sm text-[var(--text-dim)]">SMK Wikrama Bogor</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="py-8 text-center text-xs text-[var(--text-dim)] font-mono border-t border-white/5">
+  © 2026 Muhammad Azka Awwadi — Murid SMK Wikrama Bogor.
+</footer>
+
+<script>
+  // ---------- Mobile menu ----------
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+    mobileMenu.classList.toggle('flex');
+  });
+  document.querySelectorAll('#mobile-menu a').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('flex');
+    });
+  });
+
+  // ---------- Typing effect ----------
+  const roles = [" Wilujeng sumping di halaman pribadi abdi!"];
+  const typingEl = document.getElementById('typing-text');
+  let roleIndex = 0, charIndex = 0, deleting = false;
+
+  function typeLoop(){
+    const current = roles[roleIndex];
+    if(!deleting){
+      charIndex++;
+      typingEl.textContent = current.slice(0, charIndex);
+      if(charIndex === current.length){
+        deleting = true;
+        setTimeout(typeLoop, 1400);
+        return;
+      }
+    } else {
+      charIndex--;
+      typingEl.textContent = current.slice(0, charIndex);
+      if(charIndex === 0){
+        deleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+      }
+    }
+    setTimeout(typeLoop, deleting ? 45 : 90);
+  }
+  typeLoop();
+
+  // ---------- Generate 16 sertifikat ----------
+  const sertifikat = [
+  {
+    nama: "Sertifikat Digital Talent Ethical Hacker For Dummies",
+    gambar: "Sertifikat Digital Talent Ethical Hacker For Dummies.jpg"
+  },
+  {
+    nama: "Sertifikat CodingCamp RevoU",
+    gambar: "Sertifikat CodingCamp RevoU.jpg"
+  },
+  {
+    nama: "Sertifikat Digital Talent Pengenalan Hak Atas Kekayaan Intelektual (HAKI) Dalam Perlindungan Karya dan Inovasi Digital",
+    gambar: "Sertifikat Digital Talent Pengenalan Hak Atas Kekayaan Intelektual (HAKI) Dalam Perlindungan Karya dan Inovasi Digital.jpg"
+  },
+  {
+    nama: "Sertifikat GCFGlobal Computer Basics",
+    gambar: "Sertifikat GCFGlobal Computer Basics.jpg"
+  },
+  {
+    nama: "Sertifikat Digital Talent Ancaman Pembobolan Akun Pribadi dan Pencegahannya",
+    gambar: "Sertifikat Digital Talent Ancaman Pembobolan Akun Pribadi dan Pencegahannya.jpg"
+  },
+  {
+    nama: "Sertifikat 'Basics of Artificial Intelligence' - UniAthena",
+    gambar: "Sertifikat 'Basics of Artificial Intelligence' - UniAthena.jpg"
+  },
+  {
+    nama: "Sertifikat Digital Talent Introduction to Cyber Security and Career Awareness",
+    gambar: "Sertifikat Digital Talent Introduction to Cyber Security and Career Awareness.jpg"
+  },
+  {
+    nama: "Sertifikat HP Foundation",
+    gambar: "Sertifikat HP Foundation.jpg"
+  },
+  {
+    nama: "Sertifikat Digital Talent Tips Melindungi Diri Dari Ancaman Phising dan Malware di Era Digital",
+    gambar: "Sertifikat Digital Talent Tips Melindungi Diri Dari Ancaman Phising dan Malware di Era Digital.jpg"
+  },
+  {
+    nama: "Sertifikat E-Learning K3",
+    gambar: "Sertifikat E-Learning K3.jpg"
+  },
+  {
+    nama: "Sertifikat Digital Talent Warisan yang Anda Tinggalkan di Dunia Maya",
+    gambar: "Sertifikat Digital Talent Warisan yang Anda Tinggalkan di Dunia Maya.jpg"
+  },
+  {
+    nama: "Sertifikat Nevada Standards Aligned 'CSF 1st Grade'",
+    gambar: "Sertifikat Nevada Standards Aligned 'CSF 1st Grade'.jpeg"
+  },
+  {
+    nama: "Sertifikat Digital Talent Seberapa Penting Menjaga Data Pribadi dan Pelindungannya",
+    gambar: "Sertifikat Digital Talent Seberapa Penting Menjaga Data Pribadi dan Pelindungannya.jpg"
+  },
+  {
+    nama: "Sertifikat Akademi Dicoding 'Belajar Dasar Manajemen Proyek'",
+    gambar: "Sertifikat Akademi Dicoding 'Belajar Dasar Manajemen Proyek'.jpeg"
+  },
+  {
+    nama: "Sertifikat Digital Talent Pentingnya Menjaga Keamanan Digital_ Perlindungan Diri di Dunia Maya",
+    gambar: "Sertifikat Digital Talent Pentingnya Menjaga Keamanan Digital_ Perlindungan Diri di Dunia Maya.jpeg"
+  },
+  {
+    nama: "Sertifikat Coding Camp 2026 – DBS Foundation x Dicoding",
+    gambar: "Sertifikat Coding Camp 2026 – DBS Foundation x Dicoding.jpeg"
+  },
+  ];
+
+  const certGrid = document.getElementById("cert-grid");
+
+  sertifikat.forEach(item => {
+  const card = document.createElement("div");
+  card.className = "cert-card";
+
+  card.innerHTML = `
+    <div class="cert-img-wrap">
+      <img src="${item.gambar}" alt="${item.nama}" loading="lazy">
+    </div>
+    <p class="font-mono text-xs text-center py-2.5" style="color:var(--text-dim)">
+      ${item.nama}
+    </p>
+  `;
+
+  card.addEventListener("click", () => openCertModal(item.gambar, item.nama));
+
+  certGrid.appendChild(card);
+  });
+
+  // ---------- Modal ----------
+  const modal = document.getElementById('cert-modal');
+  const modalImg = document.getElementById('cert-modal-img');
+  const modalClose = document.getElementById('cert-modal-close');
+
+  function openCertModal(src, alt){
+    modalImg.src = src;
+    modalImg.alt = alt;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCertModal(){
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeCertModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeCertModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeCertModal(); });
+
+  // ---------- Navbar shadow on scroll ----------
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.style.boxShadow = window.scrollY > 10 ? '0 8px 24px rgba(0,0,0,0.35)' : 'none';
+  });
+
+  // ---------- Scroll reveal ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
